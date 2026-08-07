@@ -1,0 +1,21 @@
+body{
+
+    margin:0;
+
+    background:#F1F5F9;
+
+    font-family:Arial,Helvetica,sans-serif;
+
+}
+
+.dashboard-content{
+
+    margin-left:250px;
+
+}
+
+.main-content{
+
+    padding:30px;
+
+}

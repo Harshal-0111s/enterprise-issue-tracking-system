@@ -1,0 +1,85 @@
+.create-ticket{
+
+    width:700px;
+
+    margin:40px auto;
+
+    background:white;
+
+    padding:35px;
+
+    border-radius:12px;
+
+    box-shadow:0 5px 15px rgba(0,0,0,.1);
+
+}
+
+.create-ticket h1{
+
+    margin-bottom:30px;
+
+}
+
+.create-ticket form{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.create-ticket label{
+
+    margin-top:15px;
+
+    margin-bottom:8px;
+
+    font-weight:bold;
+
+}
+
+.create-ticket input,
+.create-ticket select,
+.create-ticket textarea{
+
+    padding:12px;
+
+    border:1px solid #ccc;
+
+    border-radius:8px;
+
+    font-size:15px;
+
+}
+
+.create-ticket textarea{
+
+    resize:none;
+
+}
+
+.create-ticket button{
+
+    margin-top:25px;
+
+    padding:15px;
+
+    border:none;
+
+    background:#2563EB;
+
+    color:white;
+
+    font-size:17px;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+}
+
+.create-ticket button:hover{
+
+    background:#1D4ED8;
+
+}
