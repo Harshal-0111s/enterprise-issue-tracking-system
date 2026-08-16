@@ -5,6 +5,7 @@ const cors = require("cors");
 const userRoutes = require("./routes/userRoutes");
 const ticketRoutes = require("./routes/ticketRoutes");
 const commentRoutes = require("./routes/commentRoutes");
+const activityRoutes = require("./routes/activityRoutes");
 
 require("./config/db");
 
@@ -24,6 +25,7 @@ app.use("/api/users", userRoutes);
 // Ticket Routes
 app.use("/api/tickets", ticketRoutes);
 app.use("/api/comments", commentRoutes);
+app.use("/api/activities", activityRoutes);
 
 // Test Route
 app.get("/", (req, res) => {
