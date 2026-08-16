@@ -5,6 +5,7 @@ import Register from "../pages/Register";
 import Dashboard from "../pages/Dashboard";
 import CreateTicket from "../pages/CreateTicket";
 import ViewTicket from "../pages/ViewTicket";
+import TicketDetails from "../pages/TicketDetails";
 import Reports from "../pages/Reports";
 import ForgotPassword from "../pages/ForgotPassword";
 import OTPLogin from "../pages/OTPLogin";
@@ -29,6 +30,8 @@ function AppRoutes() {
 <Route path="/create-ticket" element={<CreateTicket />} />
 
 <Route path="/view-tickets" element={<ViewTicket />} />
+
+<Route path="/ticket/:id" element={<TicketDetails />} />
 
 <Route path="/reports" element={<Reports />} />
 

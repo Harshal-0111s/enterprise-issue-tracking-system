@@ -17,9 +17,6 @@ function ViewTicket() {
     const [commentType, setCommentType] = useState("reply");
     const [commentLoading, setCommentLoading] = useState(false);
 
-    const [activities, setActivities] = useState([]);
-    const [activityLoading, setActivityLoading] = useState(false);
-
     const [searchParams] = useSearchParams();
 
     useEffect(() => {
@@ -73,42 +70,6 @@ function ViewTicket() {
         }
     };
 
-    const fetchActivities = async (ticketId) => {
-
-        if (!ticketId) {
-            setActivities([]);
-            return;
-        }
-
-        try {
-
-            setActivityLoading(true);
-
-            const response = await API.get(
-                `/activities/ticket/${ticketId}`
-            );
-
-            setActivities(
-                response.data.activities || []
-            );
-
-        } catch (error) {
-
-            console.error(
-                "Unable to fetch ticket activities:",
-                error
-            );
-
-            setActivities([]);
-
-        } finally {
-
-            setActivityLoading(false);
-
-        }
-    };
-
-
     const openTicket = async (ticket) => {
         try {
             const response = await API.get(
@@ -122,10 +83,7 @@ function ViewTicket() {
             setCommentType("reply");
 
             await fetchComments(ticket.id);
-            await fetchActivities(ticket.id);
-
         } catch (error) {
-
             console.error("Unable to open ticket:", error);
 
             setSelectedTicket(ticket);
@@ -133,14 +91,12 @@ function ViewTicket() {
             setCommentType("reply");
 
             await fetchComments(ticket.id);
-            await fetchActivities(ticket.id);
         }
     };
 
     const backToTickets = () => {
         setSelectedTicket(null);
         setComments([]);
-        setActivities([]);
         setNewComment("");
         setCommentType("reply");
     };
@@ -238,8 +194,6 @@ function ViewTicket() {
             setSelectedTicket(response.data.ticket);
 
             await fetchTickets();
-            await fetchActivities(ticket.id);
-
         } catch (error) {
             console.error("Update failed:", error);
         }
@@ -1211,8 +1165,6 @@ function ViewTicket() {
 
                             <div className="activity-list">
 
-                                {/* Ticket created */}
-
                                 <div className="activity-item">
 
                                     <div className="activity-icon">
@@ -1240,76 +1192,6 @@ function ViewTicket() {
 
                                 </div>
 
-
-                                {/* Real database activities */}
-
-                                {activityLoading ? (
-
-                                    <div className="activity-empty">
-                                        Loading ticket history...
-                                    </div>
-
-                                ) : activities.length === 0 ? (
-
-                                    <div className="activity-empty">
-                                        No additional activity yet.
-                                    </div>
-
-                                ) : (
-
-                                    activities.map((activity) => {
-
-                                        const activityTitle =
-                                            (activity.activity_type || "Activity")
-                                                .replace(/_/g, " ")
-                                                .replace(
-                                                    /\b\w/g,
-                                                    (letter) =>
-                                                        letter.toUpperCase()
-                                                );
-
-                                        return (
-
-                                            <div
-                                                className="activity-item"
-                                                key={activity.id}
-                                            >
-
-                                                <div className="activity-icon secondary">
-                                                    →
-                                                </div>
-
-                                                <div className="activity-content">
-
-                                                    <strong>
-                                                        {activityTitle}
-                                                    </strong>
-
-                                                    <p>
-                                                        {activity.description}
-                                                    </p>
-
-                                                    <span>
-                                                        {activity.full_name ||
-                                                            "System User"}
-                                                        {" • "}
-                                                        {formatDate(
-                                                            activity.created_at
-                                                        )}
-                                                    </span>
-
-                                                </div>
-
-                                            </div>
-
-                                        );
-
-                                    })
-
-                                )}
-
-
-                                {/* Current status */}
 
                                 <div className="activity-item">
 

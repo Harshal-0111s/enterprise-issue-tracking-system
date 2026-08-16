@@ -6,8 +6,17 @@ const Ticket = {
 
         const sql = `
             INSERT INTO tickets
-            (ticket_title, category, priority, description, attachment, created_by)
-            VALUES (?, ?, ?, ?, ?, ?)
+            (
+                ticket_title,
+                category,
+                priority,
+                description,
+                attachment,
+                created_by,
+                assigned_to,
+                department
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         `;
 
         db.query(
@@ -18,28 +27,54 @@ const Ticket = {
                 ticketData.priority,
                 ticketData.description,
                 ticketData.attachment,
-                ticketData.created_by
+                ticketData.created_by,
+                ticketData.assigned_to,
+                ticketData.department
             ],
             callback
         );
 
     },
 
-    getAllTickets: (callback) => {
 
-        const sql = `
-            SELECT
-                t.*,
-                u.full_name
-            FROM tickets t
-            LEFT JOIN users u
-            ON t.created_by = u.id
-            ORDER BY t.created_at DESC
-        `;
+   getAllTickets: (callback) => {
 
-        db.query(sql, callback);
+    const sql = `
+        SELECT
+            t.*,
+            requester.full_name AS requester_name,
+            requester.email AS requester_email
+        FROM tickets t
 
-    },
+        LEFT JOIN users requester
+            ON t.created_by = requester.id
+
+        ORDER BY t.created_at DESC
+    `;
+
+    db.query(sql, callback);
+
+},
+
+getTicketById: (id, callback) => {
+
+    const sql = `
+        SELECT
+            t.*,
+            requester.full_name AS requester_name,
+            requester.email AS requester_email
+        FROM tickets t
+
+        LEFT JOIN users requester
+            ON t.created_by = requester.id
+
+        WHERE t.id = ?
+    `;
+
+    db.query(sql, [id], callback);
+
+},
+
 
     updateTicket: (id, ticketData, callback) => {
 
@@ -50,7 +85,9 @@ const Ticket = {
                 category = ?,
                 priority = ?,
                 description = ?,
-                status = ?
+                status = ?,
+                assigned_to = ?,
+                department = ?
             WHERE id = ?
         `;
 
@@ -62,12 +99,15 @@ const Ticket = {
                 ticketData.priority,
                 ticketData.description,
                 ticketData.status,
+                ticketData.assigned_to,
+                ticketData.department,
                 id
             ],
             callback
         );
 
     },
+
 
     deleteTicket: (id, callback) => {
 

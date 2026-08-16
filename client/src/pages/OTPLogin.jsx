@@ -47,7 +47,6 @@ function OTPLogin() {
             localStorage.setItem("token", response.data.token);
             localStorage.setItem("user", JSON.stringify(response.data.user));
 
-            alert("OTP Login Successful");
             navigate("/dashboard");
         } catch (error) {
             alert(error.response?.data?.message || "OTP verification failed.");

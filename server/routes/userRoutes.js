@@ -1,9 +1,47 @@
 const express = require("express");
+
 const router = express.Router();
 
 const verifyToken = require("../middleware/authMiddleware");
-const { getProfile } = require("../controllers/userController");
 
-router.get("/profile", verifyToken, getProfile);
+const {
+    getProfile,
+    getAllUsers,
+    getAgents
+} = require("../controllers/userController");
+
+
+/* =========================
+   PROFILE
+========================= */
+
+router.get(
+    "/profile",
+    verifyToken,
+    getProfile
+);
+
+
+/* =========================
+   ALL USERS
+========================= */
+
+router.get(
+    "/",
+    verifyToken,
+    getAllUsers
+);
+
+
+/* =========================
+   SUPPORT AGENTS
+========================= */
+
+router.get(
+    "/agents",
+    verifyToken,
+    getAgents
+);
+
 
 module.exports = router;

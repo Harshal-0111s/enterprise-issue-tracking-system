@@ -3,12 +3,12 @@ const Ticket = require("../models/ticketModel");
 const createTicket = (req, res) => {
 
     const {
-
         ticket_title,
         category,
         priority,
-        description
-
+        description,
+        department,
+        assigned_to
     } = req.body;
 
     if (
@@ -16,14 +16,10 @@ const createTicket = (req, res) => {
         !category ||
         !priority
     ) {
-        
         return res.status(400).json({
-
             success: false,
             message: "Please fill all required fields."
-
         });
-
     }
 
     const ticketData = {
@@ -32,31 +28,35 @@ const createTicket = (req, res) => {
         category,
         priority,
         description,
-        attachment: "",
-        created_by: req.user.id
+        attachment: req.file ? req.file.filename : "",
+        created_by: req.user.id,
+        assigned_to: assigned_to || null,
+        department: department || null
 
     };
 
-Ticket.createTicket(ticketData, (err, result) => {
+    Ticket.createTicket(ticketData, (err, result) => {
 
-    console.log("Database Error:", err);
-    console.log("Database Result:", result);
+        console.log("Database Error:", err);
+        console.log("Database Result:", result);
 
-    if (err) {
-        return res.status(500).json({
-            success: false,
-            message: "Database Error",
-            error: err.message
+        if (err) {
+            return res.status(500).json({
+                success: false,
+                message: "Database Error",
+                error: err.message
+            });
+        }
+
+        return res.status(201).json({
+            success: true,
+            message: "Ticket Created Successfully",
+            ticket_id: result.insertId,
+            result
         });
-    }
 
-    return res.status(201).json({
-        success: true,
-        message: "Ticket Created Successfully",
-        result
     });
 
-});
 };
 
 const getAllTickets = (req, res) => {
@@ -129,18 +129,45 @@ const getDashboardStats = (req, res) => {
 
 };
 
+const getTicketById = (req, res) => {
+
+    const { id } = req.params;
+
+    Ticket.getTicketById(id, (err, result) => {
+
+        if (err) {
+            console.error(err);
+            return res.status(500).json({
+                message: "Unable to fetch ticket"
+            });
+        }
+
+        if (result.length === 0) {
+            return res.status(404).json({
+                message: "Ticket not found"
+            });
+        }
+
+        res.status(200).json({
+            ticket: result[0]
+        });
+
+    });
+
+};
+
 const updateTicket = (req, res) => {
 
     const { id } = req.params;
 
     const {
-
         ticket_title,
         category,
         priority,
         description,
-        status
-
+        status,
+        assigned_to,
+        department
     } = req.body;
 
     const ticketData = {
@@ -149,19 +176,31 @@ const updateTicket = (req, res) => {
         category,
         priority,
         description,
-        status
+        status,
+        assigned_to: assigned_to || null,
+        department: department || null
 
     };
 
-    Ticket.updateTicket(id, ticketData, (err) => {
+    Ticket.updateTicket(id, ticketData, (err, result) => {
 
         if (err) {
 
+            console.error("Update Ticket Error:", err);
+
             return res.status(500).json({
-
                 success: false,
-                message: "Database Error"
+                message: "Database Error",
+                error: err.message
+            });
 
+        }
+
+        if (result.affectedRows === 0) {
+
+            return res.status(404).json({
+                success: false,
+                message: "Ticket not found"
             });
 
         }
@@ -208,6 +247,7 @@ const deleteTicket = (req, res) => {
 module.exports = {
     createTicket,
     getAllTickets,
+    getTicketById,
     updateTicket,
     deleteTicket,
     getDashboardStats

@@ -8,6 +8,7 @@ const upload = require("../middleware/upload");
 const {
     createTicket,
     getAllTickets,
+    getTicketById,
     updateTicket,
     deleteTicket,
     getDashboardStats
@@ -18,6 +19,8 @@ router.post("/create", verifyToken, upload.single("attachment"), createTicket);
 router.get("/", verifyToken, getAllTickets);
 
 router.get("/stats", verifyToken, getDashboardStats);
+
+router.get("/:id", verifyToken, getTicketById);
 
 router.put("/:id", verifyToken, updateTicket);
 

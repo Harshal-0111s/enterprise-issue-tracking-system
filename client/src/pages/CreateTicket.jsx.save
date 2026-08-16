@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import API from "../api/ticketApi";
 import "../styles/CreateTicket.css";
 
 function CreateTicket() {
+    const navigate = useNavigate();
 
     const [ticket, setTicket] = useState({
         ticket_title: "",
@@ -13,64 +15,71 @@ function CreateTicket() {
         department: "IT Support"
     });
 
-    const [agents, setAgents] = useState([]);
-
-    useEffect(() => {
 
         const fetchAgents = async () => {
-
             try {
-
                 const response = await API.get("/users/agents");
-
                 setAgents(response.data.agents || []);
-
             } catch (error) {
-
                 console.error(
                     "Failed to load support agents:",
                     error
                 );
-
             }
-
         };
 
         fetchAgents();
-
     }, []);
 
-    const handleChange = (e) => {
+    useEffect(() => {
+        if (!success) return;
 
+        const redirectTimer = setTimeout(() => {
+            navigate("/dashboard");
+        }, 5000);
+
+        const countdownTimer = setInterval(() => {
+            setCountdown((previous) => {
+                if (previous <= 1) {
+                    clearInterval(countdownTimer);
+                    return 0;
+                }
+
+                return previous - 1;
+            });
+        }, 1000);
+
+        return () => {
+            clearTimeout(redirectTimer);
+            clearInterval(countdownTimer);
+        };
+    }, [success, navigate]);
+
+    const handleChange = (e) => {
         setTicket({
             ...ticket,
             [e.target.name]: e.target.value
         });
-
     };
 
     const handleSubmit = async (e) => {
-
         e.preventDefault();
 
         try {
-
-            await API.post(
+            const response = await API.post(
                 "/tickets/create",
                 {
                     ...ticket,
-
                     assigned_to: ticket.assigned_to
                         ? Number(ticket.assigned_to)
                         : null
                 }
             );
 
-            /*
-             * Ticket created successfully.
-             * No success popup or success screen.
-             * Simply reset the form.
-             */
+const newTicketId = response.data.ticket_id || null;
+
+            setCreatedTicketId(newTicketId);
+            setSuccess(true);
 
             setTicket({
                 ticket_title: "",
@@ -82,36 +91,64 @@ function CreateTicket() {
             });
 
         } catch (error) {
-
-            console.error(
-                "Create Ticket Error:",
-                error
-            );
+            console.error("Create Ticket Error:", error);
 
             alert(
                 error.response?.data?.message ||
                 "Failed to create ticket."
             );
-
         }
-
     };
 
-    return (
+    if (success) {
+        return (
+            <div className="create-ticket success-container">
 
+                <div className="success-icon">
+                    ✓
+                </div>
+
+                <h1>Ticket Created Successfully</h1>
+
+                <p className="success-message">
+                    Your support ticket has been submitted successfully.
+                </p>
+
+                {createdTicketId && (
+                    <p className="ticket-id-message">
+                        Ticket ID: <strong>#{createdTicketId}</strong>
+                    </p>
+                )}
+
+                <p className="support-message">
+                    Our customer support team will review your request
+                    and contact you via email within <strong>3–5 working days</strong>.
+                </p>
+
+                <p className="redirect-message">
+                    Redirecting to Dashboard in{" "}
+                    <strong>{countdown}</strong> seconds...
+                </p>
+
+                <button
+                    className="success-dashboard-button"
+                    onClick={() => navigate("/dashboard")}
+                >
+                    Go to Dashboard Now
+                </button>
+
+            </div>
+        );
+    }
+
+    return (
         <div className="create-ticket">
 
             <h1>Create Ticket</h1>
 
             <form onSubmit={handleSubmit}>
 
-                {/* =========================
-                    TICKET TITLE
-                ========================= */}
-
-                <label>
-                    Ticket Title
-                </label>
+                <label>Ticket Title</label>
 
                 <input
                     type="text"
@@ -122,149 +159,68 @@ function CreateTicket() {
                     required
                 />
 
-
-                {/* =========================
-                    CATEGORY
-                ========================= */}
-
-                <label>
-                    Category
-                </label>
+                <label>Category</label>
 
                 <select
                     name="category"
                     value={ticket.category}
                     onChange={handleChange}
                 >
-
-                    <option value="Software">
-                        Software
-                    </option>
-
-                    <option value="Hardware">
-                        Hardware
-                    </option>
-
-                    <option value="Network">
-                        Network
-                    </option>
-
-                    <option value="Other">
-                        Other
-                    </option>
-
+                    <option>Software</option>
+                    <option>Hardware</option>
+                    <option>Network</option>
+                    <option>Other</option>
                 </select>
 
-
-                {/* =========================
-                    PRIORITY
-                ========================= */}
-
-                <label>
-                    Priority
-                </label>
+                <label>Priority</label>
 
                 <select
                     name="priority"
                     value={ticket.priority}
                     onChange={handleChange}
                 >
-
-                    <option value="Low">
-                        Low
-                    </option>
-
-                    <option value="Medium">
-                        Medium
-                    </option>
-
-                    <option value="High">
-                        High
-                    </option>
-
-                    <option value="Critical">
-                        Critical
-                    </option>
-
+                    <option>Low</option>
+                    <option>Medium</option>
+                    <option>High</option>
+                    <option>Critical</option>
                 </select>
 
-
-                {/* =========================
-                    DEPARTMENT
-                ========================= */}
-
-                <label>
-                    Department
-                </label>
+                <label>Department</label>
 
                 <select
                     name="department"
                     value={ticket.department}
                     onChange={handleChange}
                 >
-
-                    <option value="IT Support">
-                        IT Support
-                    </option>
-
-                    <option value="Technical Support">
-                        Technical Support
-                    </option>
-
-                    <option value="Network">
-                        Network
-                    </option>
-
-                    <option value="HR">
-                        HR
-                    </option>
-
-                    <option value="Finance">
-                        Finance
-                    </option>
-
+                    <option>IT Support</option>
+                    <option>HR</option>
+                    <option>Finance</option>
+                    <option>Administration</option>
+                    <option>Network</option>
                 </select>
 
-
-                {/* =========================
-                    ASSIGN TICKET
-                ========================= */}
-
-                <label>
-                    Assign To
-                </label>
+                <label>Assign To</label>
 
                 <select
                     name="assigned_to"
                     value={ticket.assigned_to}
                     onChange={handleChange}
                 >
-
                     <option value="">
-                        Unassigned
+                        Select Support Employee
                     </option>
 
                     {agents.map((agent) => (
-
                         <option
                             key={agent.id}
                             value={agent.id}
                         >
-                            {agent.full_name} — {agent.email}
+                            {agent.full_name}
                         </option>
-
                     ))}
-
                 </select>
 
-
-                {/* =========================
-                    DESCRIPTION
-                ========================= */}
-
-                <label>
-                    Description
-                </label>
+                <label>Description</label>
 
                 <textarea
                     rows="6"
@@ -274,11 +230,6 @@ function CreateTicket() {
                     placeholder="Describe your issue..."
                 />
 
-
-                {/* =========================
-                    SUBMIT
-                ========================= */}
-
                 <button type="submit">
                     Create Ticket
                 </button>
@@ -286,9 +237,7 @@ function CreateTicket() {
             </form>
 
         </div>
-
     );
-
 }
 
 export default CreateTicket;

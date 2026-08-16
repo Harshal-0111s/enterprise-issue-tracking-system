@@ -14,8 +14,12 @@ app.use(express.json());
 
 // Authentication Routes
 app.use("/api/auth", authRoutes);
-app.use("/api/tickets", ticketRoutes);
 
+// User Routes
+app.use("/api/users", userRoutes);
+
+// Ticket Routes
+app.use("/api/tickets", ticketRoutes);
 
 // Test Route
 app.get("/", (req, res) => {
