@@ -1,7 +1,10 @@
+require("dotenv").config();
+
 const express = require("express");
 const cors = require("cors");
 const userRoutes = require("./routes/userRoutes");
 const ticketRoutes = require("./routes/ticketRoutes");
+const commentRoutes = require("./routes/commentRoutes");
 
 require("./config/db");
 
@@ -20,6 +23,7 @@ app.use("/api/users", userRoutes);
 
 // Ticket Routes
 app.use("/api/tickets", ticketRoutes);
+app.use("/api/comments", commentRoutes);
 
 // Test Route
 app.get("/", (req, res) => {

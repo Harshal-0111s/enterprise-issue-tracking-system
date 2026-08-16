@@ -1,10 +1,27 @@
+require("dotenv").config();
+
 const mysql = require("mysql2");
 
+const {
+    DB_HOST,
+    DB_USER,
+    DB_PASSWORD,
+    DB_NAME
+} = process.env;
+
+if (!DB_USER || !DB_PASSWORD || !DB_NAME) {
+    console.error("❌ Database environment variables are missing.");
+    console.error("DB_HOST:", DB_HOST || "(missing)");
+    console.error("DB_USER:", DB_USER || "(missing)");
+    console.error("DB_NAME:", DB_NAME || "(missing)");
+    process.exit(1);
+}
+
 const pool = mysql.createPool({
-    host: process.env.DB_HOST || "localhost",
-    user: process.env.DB_USER || "root",
-    password: process.env.DB_PASSWORD || "",
-    database: process.env.DB_NAME || "issue_tracking_db",
+    host: DB_HOST || "localhost",
+    user: DB_USER,
+    password: DB_PASSWORD,
+    database: DB_NAME,
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0
