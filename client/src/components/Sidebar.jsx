@@ -134,19 +134,15 @@ function Sidebar() {
                     </div>
 
 
-                    <a
-                        href="#users"
-                        className="menu-link disabled-link"
-                        onClick={disabledMenu}
-                    >
-
-                        <FaUsers />
-
-                        <span>Users</span>
-
-                        <small>SOON</small>
-
-                    </a>
+                    <NavLink
+    to="/users"
+    className={({ isActive }) =>
+        `menu-link ${isActive ? "active" : ""}`
+    }
+>
+    <FaUsers />
+    <span>Users</span>
+</NavLink>
 
 
                     <a

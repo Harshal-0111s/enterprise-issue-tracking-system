@@ -10,6 +10,7 @@ import Reports from "../pages/Reports";
 import ForgotPassword from "../pages/ForgotPassword";
 import OTPLogin from "../pages/OTPLogin";
 import ResetPassword from "../pages/ResetPassword";
+import Users from "../pages/Users";
 
 function AppRoutes() {
   return (
@@ -34,6 +35,8 @@ function AppRoutes() {
 <Route path="/ticket/:id" element={<TicketDetails />} />
 
 <Route path="/reports" element={<Reports />} />
+
+<Route path="/users" element={<Users />} />
 
     </Routes>
   );
