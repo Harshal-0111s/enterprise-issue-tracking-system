@@ -83,3 +83,107 @@
     background:#1D4ED8;
 
 }
+.create-ticket-success {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.success-card {
+    width: 100%;
+    max-width: 620px;
+    text-align: center;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 45px 35px;
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.12);
+}
+
+.success-check {
+    width: 76px;
+    height: 76px;
+    margin: 0 auto 22px;
+    border-radius: 50%;
+    background: #22c55e;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    font-weight: 700;
+}
+
+.success-card h1 {
+    margin: 0 0 10px;
+    color: #16a34a;
+    font-size: 28px;
+}
+
+.ticket-number {
+    font-weight: 600;
+    margin: 8px 0 18px;
+}
+
+.success-description {
+    color: #555;
+    line-height: 1.7;
+    margin: 0 auto 22px;
+    max-width: 500px;
+}
+
+.redirect-message {
+    color: #666;
+    margin-bottom: 25px;
+}
+
+.success-dashboard-button {
+    border: none;
+    border-radius: 8px;
+    padding: 11px 22px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.create-ticket-error {
+    margin-bottom: 20px;
+    padding: 12px 15px;
+    border-radius: 8px;
+    background: #fee2e2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+}
+
+.create-ticket button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+
+    .success-card {
+        padding: 35px 20px;
+    }
+
+    .success-card h1 {
+        font-size: 23px;
+    }
+
+}
+
+.attachment-help {
+    margin-top: 7px;
+    color: #666;
+    font-size: 13px;
+}
+
+.selected-file {
+    margin-top: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    color: #166534;
+    font-size: 14px;
+}
