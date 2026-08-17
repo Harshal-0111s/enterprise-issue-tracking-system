@@ -172,7 +172,6 @@
     flex-shrink: 0;
 }
 
-
 /* =========================================================
    BADGES
    ========================================================= */
@@ -959,3 +958,34 @@
         margin-right: 16px;
     }
 }
+
+.ticket-attachment-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #2563eb;
+    white-space: nowrap;
+}
+
+.ticket-attachment-section {
+    margin-top: 18px;
+    padding: 14px 16px;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.ticket-attachment-link {
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.ticket-attachment-link:hover {
+    text-decoration: underline;
+}
+

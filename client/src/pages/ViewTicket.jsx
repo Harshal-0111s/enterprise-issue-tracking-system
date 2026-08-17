@@ -510,6 +510,25 @@ function ViewTicket() {
                                         "No description provided."}
                                 </div>
 
+                                {selectedTicket.attachment && (
+                                    <div className="ticket-attachment-section">
+
+                                        <strong>
+                                            📎 Attached File
+                                        </strong>
+
+                                        <a
+                                            href={`${process.env.REACT_APP_API_URL}/uploads/${selectedTicket.attachment}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="ticket-attachment-link"
+                                        >
+                                            View Attached File
+                                        </a>
+
+                                    </div>
+                                )}
+
                             </div>
 
                         </section>
@@ -1755,6 +1774,10 @@ function ViewTicket() {
                                 </th>
 
                                 <th>
+                                    Attachment
+                                </th>
+
+                                <th>
                                     Created
                                 </th>
 
@@ -1947,6 +1970,22 @@ function ViewTicket() {
 
                                                 </select>
 
+                                            </td>
+
+
+                                            <td>
+                                                {ticket.attachment ? (
+                                                    <span
+                                                        className="ticket-attachment-indicator"
+                                                        title="Attachment available"
+                                                    >
+                                                        📎 Attachment
+                                                    </span>
+                                                ) : (
+                                                    <span className="muted">
+                                                        —
+                                                    </span>
+                                                )}
                                             </td>
 
 

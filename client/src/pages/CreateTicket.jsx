@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import API from "../api/ticketApi";
 import "../styles/CreateTicket.css";
 
 function CreateTicket() {
+
+    const navigate = useNavigate();
 
     const [ticket, setTicket] = useState({
         ticket_title: "",
@@ -13,7 +16,12 @@ function CreateTicket() {
         department: "IT Support"
     });
 
+    const [attachment, setAttachment] = useState(null);
     const [agents, setAgents] = useState([]);
+    const [createdTicketId, setCreatedTicketId] = useState(null);
+    const [redirectCountdown, setRedirectCountdown] = useState(5);
+    const [creating, setCreating] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
 
     useEffect(() => {
 
@@ -40,6 +48,35 @@ function CreateTicket() {
 
     }, []);
 
+    useEffect(() => {
+
+        if (!createdTicketId) {
+            return;
+        }
+
+        if (redirectCountdown <= 0) {
+
+            navigate("/dashboard");
+
+            return;
+        }
+
+        const timer = setTimeout(() => {
+
+            setRedirectCountdown(
+                (previous) => previous - 1
+            );
+
+        }, 1000);
+
+        return () => clearTimeout(timer);
+
+    }, [
+        createdTicketId,
+        redirectCountdown,
+        navigate
+    ]);
+
     const handleChange = (e) => {
 
         setTicket({
@@ -47,39 +84,130 @@ function CreateTicket() {
             [e.target.name]: e.target.value
         });
 
+        setErrorMessage("");
+
+    };
+
+    const handleAttachmentChange = (e) => {
+
+        const file = e.target.files?.[0];
+
+        if (!file) {
+            setAttachment(null);
+            return;
+        }
+
+        const allowedTypes = [
+            "image/jpeg",
+            "image/png",
+            "application/pdf",
+            "application/msword",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        ];
+
+        const maxSize = 5 * 1024 * 1024;
+
+        if (!allowedTypes.includes(file.type)) {
+
+            setErrorMessage(
+                "Invalid file type. Please attach JPG, PNG, PDF, DOC or DOCX."
+            );
+
+            e.target.value = "";
+            setAttachment(null);
+
+            return;
+        }
+
+        if (file.size > maxSize) {
+
+            setErrorMessage(
+                "File is too large. Maximum attachment size is 5 MB."
+            );
+
+            e.target.value = "";
+            setAttachment(null);
+
+            return;
+        }
+
+        setAttachment(file);
+        setErrorMessage("");
+
     };
 
     const handleSubmit = async (e) => {
 
         e.preventDefault();
 
+        if (creating) {
+            return;
+        }
+
+        setCreating(true);
+        setErrorMessage("");
+
         try {
 
-            await API.post(
-                "/tickets/create",
-                {
-                    ...ticket,
+            const formData = new FormData();
 
-                    assigned_to: ticket.assigned_to
-                        ? Number(ticket.assigned_to)
-                        : null
-                }
+            formData.append(
+                "ticket_title",
+                ticket.ticket_title
             );
 
-            /*
-             * Ticket created successfully.
-             * No success popup or success screen.
-             * Simply reset the form.
-             */
+            formData.append(
+                "category",
+                ticket.category
+            );
 
-            setTicket({
-                ticket_title: "",
-                category: "Software",
-                priority: "Low",
-                description: "",
-                assigned_to: "",
-                department: "IT Support"
-            });
+            formData.append(
+                "priority",
+                ticket.priority
+            );
+
+            formData.append(
+                "description",
+                ticket.description
+            );
+
+            formData.append(
+                "department",
+                ticket.department
+            );
+
+            formData.append(
+                "assigned_to",
+                ticket.assigned_to
+                    ? Number(ticket.assigned_to)
+                    : ""
+            );
+
+            if (attachment) {
+
+                formData.append(
+                    "attachment",
+                    attachment
+                );
+
+            }
+
+            const response = await API.post(
+                "/tickets/create",
+                formData
+            );
+
+            const newTicketId =
+                response.data?.ticket?.id ||
+                response.data?.ticket_id ||
+                response.data?.id ||
+                null;
+
+            setCreatedTicketId(
+                newTicketId || "created"
+            );
+
+            setRedirectCountdown(5);
 
         } catch (error) {
 
@@ -88,14 +216,71 @@ function CreateTicket() {
                 error
             );
 
-            alert(
+            setErrorMessage(
                 error.response?.data?.message ||
-                "Failed to create ticket."
+                "Failed to create ticket. Please try again."
             );
+
+            setCreating(false);
 
         }
 
     };
+
+    if (createdTicketId) {
+
+        return (
+
+            <div className="create-ticket-success">
+
+                <div className="success-card">
+
+                    <div className="success-check">
+                        ✓
+                    </div>
+
+                    <h1>
+                        Ticket Created Successfully
+                    </h1>
+
+                    {createdTicketId !== "created" && (
+
+                        <p className="ticket-number">
+                            Ticket #{createdTicketId}
+                        </p>
+
+                    )}
+
+                    <p className="success-description">
+                        Your ticket has been submitted successfully.
+                        Our customer support team will review your request
+                        and contact you via email within 3–5 working days.
+                    </p>
+
+                    <p className="redirect-message">
+                        Redirecting to Dashboard{" "}
+                        in{" "}
+                        <strong>
+                            {redirectCountdown}
+                        </strong>{" "}
+                        seconds...
+                    </p>
+
+                    <button
+                        type="button"
+                        onClick={() => navigate("/dashboard")}
+                        className="success-dashboard-button"
+                    >
+                        Go to Dashboard Now
+                    </button>
+
+                </div>
+
+            </div>
+
+        );
+
+    }
 
     return (
 
@@ -103,11 +288,15 @@ function CreateTicket() {
 
             <h1>Create Ticket</h1>
 
-            <form onSubmit={handleSubmit}>
+            {errorMessage && (
 
-                {/* =========================
-                    TICKET TITLE
-                ========================= */}
+                <div className="create-ticket-error">
+                    {errorMessage}
+                </div>
+
+            )}
+
+            <form onSubmit={handleSubmit}>
 
                 <label>
                     Ticket Title
@@ -121,11 +310,6 @@ function CreateTicket() {
                     placeholder="Enter Ticket Title"
                     required
                 />
-
-
-                {/* =========================
-                    CATEGORY
-                ========================= */}
 
                 <label>
                     Category
@@ -155,11 +339,6 @@ function CreateTicket() {
 
                 </select>
 
-
-                {/* =========================
-                    PRIORITY
-                ========================= */}
-
                 <label>
                     Priority
                 </label>
@@ -187,11 +366,6 @@ function CreateTicket() {
                     </option>
 
                 </select>
-
-
-                {/* =========================
-                    DEPARTMENT
-                ========================= */}
 
                 <label>
                     Department
@@ -225,11 +399,6 @@ function CreateTicket() {
 
                 </select>
 
-
-                {/* =========================
-                    ASSIGN TICKET
-                ========================= */}
-
                 <label>
                     Assign To
                 </label>
@@ -257,11 +426,6 @@ function CreateTicket() {
 
                 </select>
 
-
-                {/* =========================
-                    DESCRIPTION
-                ========================= */}
-
                 <label>
                     Description
                 </label>
@@ -274,13 +438,36 @@ function CreateTicket() {
                     placeholder="Describe your issue..."
                 />
 
+                <label>
+                    Attachment
+                </label>
 
-                {/* =========================
-                    SUBMIT
-                ========================= */}
+                <input
+                    type="file"
+                    name="attachment"
+                    accept=".jpg,.jpeg,.png,.pdf,.doc,.docx"
+                    onChange={handleAttachmentChange}
+                />
 
-                <button type="submit">
-                    Create Ticket
+                <small className="attachment-help">
+                    Supported: JPG, PNG, PDF, DOC, DOCX • Maximum size: 5 MB
+                </small>
+
+                {attachment && (
+
+                    <div className="selected-file">
+                        📎 {attachment.name}
+                    </div>
+
+                )}
+
+                <button
+                    type="submit"
+                    disabled={creating}
+                >
+                    {creating
+                        ? "Creating Ticket..."
+                        : "Create Ticket"}
                 </button>
 
             </form>
