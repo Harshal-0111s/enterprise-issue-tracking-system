@@ -11,6 +11,7 @@ function ViewTicket() {
     const [search, setSearch] = useState("");
     const [statusFilter, setStatusFilter] = useState("All");
     const [priorityFilter, setPriorityFilter] = useState("All");
+    const [departmentFilter, setDepartmentFilter] = useState("All");
 
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState("");
@@ -24,11 +25,18 @@ function ViewTicket() {
 
     useEffect(() => {
         const statusFromDashboard = searchParams.get("status");
+        const departmentFromPage = searchParams.get("department");
 
         if (statusFromDashboard) {
             setStatusFilter(statusFromDashboard);
         } else {
             setStatusFilter("All");
+        }
+
+        if (departmentFromPage) {
+            setDepartmentFilter(departmentFromPage);
+        } else {
+            setDepartmentFilter("All");
         }
 
         fetchTickets();
@@ -260,6 +268,11 @@ function ViewTicket() {
             priorityFilter === "All"
                 ? true
                 : ticket.priority === priorityFilter
+        )
+        .filter((ticket) =>
+            departmentFilter === "All"
+                ? true
+                : ticket.department === departmentFilter
         )
         .sort(
             (a, b) =>
@@ -1731,6 +1744,38 @@ function ViewTicket() {
 
                     <option value="Critical">
                         Critical
+                    </option>
+                </select>
+
+
+                <select
+                    value={departmentFilter}
+                    onChange={(e) =>
+                        setDepartmentFilter(e.target.value)
+                    }
+                >
+                    <option value="All">
+                        All Departments
+                    </option>
+
+                    <option value="IT Support">
+                        IT Support
+                    </option>
+
+                    <option value="Technical Support">
+                        Technical Support
+                    </option>
+
+                    <option value="Network">
+                        Network
+                    </option>
+
+                    <option value="HR">
+                        HR
+                    </option>
+
+                    <option value="Finance">
+                        Finance
                     </option>
                 </select>
 

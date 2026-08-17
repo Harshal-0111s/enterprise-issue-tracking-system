@@ -11,6 +11,7 @@ import ForgotPassword from "../pages/ForgotPassword";
 import OTPLogin from "../pages/OTPLogin";
 import ResetPassword from "../pages/ResetPassword";
 import Users from "../pages/Users";
+import Departments from "../pages/Departments";
 
 function AppRoutes() {
   return (
@@ -37,6 +38,8 @@ function AppRoutes() {
 <Route path="/reports" element={<Reports />} />
 
 <Route path="/users" element={<Users />} />
+
+<Route path="/departments" element={<Departments />} />
 
     </Routes>
   );
