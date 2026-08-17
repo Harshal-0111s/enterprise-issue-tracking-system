@@ -98,25 +98,32 @@ const Ticket = {
     },
 
 
-    getAllTickets: (callback) => {
+getAllTickets: (callback) => {
 
-        const sql = `
-            SELECT
-                t.*,
-                requester.full_name AS requester_name,
-                requester.email AS requester_email
-            FROM tickets t
+    const sql = `
+        SELECT
+            t.*,
 
-            LEFT JOIN users requester
-                ON t.created_by = requester.id
+            requester.full_name AS requester_name,
+            requester.email AS requester_email,
 
-            ORDER BY t.created_at DESC
-        `;
+            assigned.full_name AS assigned_agent_name,
+            assigned.email AS assigned_agent_email
 
-        db.query(sql, callback);
+        FROM tickets t
 
-    },
+        LEFT JOIN users requester
+            ON t.created_by = requester.id
 
+        LEFT JOIN users assigned
+            ON t.assigned_to = assigned.id
+
+        ORDER BY t.created_at DESC
+    `;
+
+    db.query(sql, callback);
+
+},
 
     getTicketById: (id, callback) => {
 
