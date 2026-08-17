@@ -1229,3 +1229,174 @@
         width: 100%;
     }
 }
+
+/* =========================================================
+   BACK TO DASHBOARD
+========================================================= */
+
+.view-tickets-dashboard-bar {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 18px;
+}
+
+.back-to-dashboard-button {
+    border: 1px solid #d1d5db;
+    background: #ffffff;
+    color: #1f2937;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.back-to-dashboard-button:hover {
+    background: #f3f4f6;
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   DELETE SUCCESS / ERROR MESSAGE
+========================================================= */
+
+.delete-message {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 2000;
+    padding: 13px 18px;
+    border-radius: 9px;
+    background: #ecfdf5;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   DELETE MODAL
+========================================================= */
+
+.delete-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(15, 23, 42, 0.55);
+}
+
+.delete-modal {
+    width: 100%;
+    max-width: 430px;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 32px;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.22);
+}
+
+.delete-modal-icon {
+    width: 52px;
+    height: 52px;
+    margin: 0 auto 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fee2e2;
+    color: #dc2626;
+    font-size: 26px;
+    font-weight: 700;
+}
+
+.delete-modal h2 {
+    margin: 0 0 12px;
+    color: #111827;
+    font-size: 22px;
+}
+
+.delete-modal p {
+    margin: 0;
+    color: #4b5563;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.delete-modal-warning {
+    display: block;
+    margin-top: 8px;
+    color: #dc2626;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.delete-modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 26px;
+}
+
+.delete-cancel-button,
+.delete-confirm-button {
+    min-width: 120px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.delete-cancel-button {
+    border: 1px solid #d1d5db;
+    background: #ffffff;
+    color: #374151;
+}
+
+.delete-cancel-button:hover {
+    background: #f3f4f6;
+}
+
+.delete-confirm-button {
+    border: 1px solid #dc2626;
+    background: #dc2626;
+    color: #ffffff;
+}
+
+.delete-confirm-button:hover {
+    background: #b91c1c;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+    .view-tickets-dashboard-bar {
+        margin-bottom: 14px;
+    }
+
+    .delete-modal {
+        padding: 26px 20px;
+    }
+
+    .delete-modal-actions {
+        flex-direction: column-reverse;
+    }
+
+    .delete-cancel-button,
+    .delete-confirm-button {
+        width: 100%;
+    }
+
+}

@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import API from "../api/ticketApi";
 import "./ViewTicket.css";
 
 function ViewTicket() {
+    const navigate = useNavigate();
+
     const [tickets, setTickets] = useState([]);
     const [agents, setAgents] = useState([]);
     const [selectedTicket, setSelectedTicket] = useState(null);
@@ -12,6 +14,9 @@ function ViewTicket() {
     const [statusFilter, setStatusFilter] = useState("All");
     const [priorityFilter, setPriorityFilter] = useState("All");
     const [departmentFilter, setDepartmentFilter] = useState("All");
+
+    const [deleteTarget, setDeleteTarget] = useState(null);
+    const [deleteMessage, setDeleteMessage] = useState("");
 
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState("");
@@ -183,22 +188,57 @@ function ViewTicket() {
     };
 
     const deleteTicket = async (id) => {
-        const confirmed = window.confirm(
-            "Are you sure you want to delete this ticket?"
-        );
 
-        if (!confirmed) return;
+        if (!id) {
+            return;
+        }
 
         try {
+
             await API.delete(`/tickets/${id}`);
 
             setSelectedTicket(null);
             setComments([]);
+            setActivities([]);
 
             await fetchTickets();
+
+            setDeleteTarget(null);
+
+            setDeleteMessage(
+                `Ticket #${id} deleted successfully.`
+            );
+
+            setTimeout(() => {
+                setDeleteMessage("");
+            }, 3000);
+
         } catch (error) {
+
             console.error("Delete failed:", error);
+
+            setDeleteTarget(null);
+
+            setDeleteMessage(
+                "Unable to delete the ticket. Please try again."
+            );
+
+            setTimeout(() => {
+                setDeleteMessage("");
+            }, 3000);
+
         }
+
+    };
+
+    const requestDeleteTicket = (ticket) => {
+
+        if (!ticket) {
+            return;
+        }
+
+        setDeleteTarget(ticket);
+
     };
 
     const updateTicket = async (ticket, changes) => {
@@ -395,8 +435,8 @@ function ViewTicket() {
                         <button
                             className="danger-action"
                             onClick={() =>
-                                deleteTicket(
-                                    selectedTicket.id
+                                requestDeleteTicket(
+                                    selectedTicket
                                 )
                             }
                         >
@@ -406,6 +446,12 @@ function ViewTicket() {
                     </div>
 
                 </div>
+
+                {deleteMessage && (
+                    <div className="delete-message">
+                        ✓ {deleteMessage}
+                    </div>
+                )}
 
 
                 {/* =================================================
@@ -1642,6 +1688,18 @@ function ViewTicket() {
     return (
         <div className="ticket-list-page">
 
+            <div className="view-tickets-dashboard-bar">
+
+                <button
+                    type="button"
+                    className="back-to-dashboard-button"
+                    onClick={() => navigate("/dashboard")}
+                >
+                    ← Back to Dashboard
+                </button>
+
+            </div>
+
             <div className="list-header">
 
                 <div>
@@ -1780,6 +1838,8 @@ function ViewTicket() {
                 </select>
 
             </div>
+
+
 
 
             {/* TABLE */}
@@ -2061,8 +2121,8 @@ function ViewTicket() {
                                                 <button
                                                     className="table-delete-button"
                                                     onClick={() =>
-                                                        deleteTicket(
-                                                            ticket.id
+                                                        requestDeleteTicket(
+                                                            ticket
                                                         )
                                                     }
                                                 >
@@ -2085,6 +2145,71 @@ function ViewTicket() {
                 </div>
 
             </div>
+
+
+            {deleteTarget && (
+
+                <div className="delete-modal-overlay">
+
+                    <div
+                        className="delete-modal"
+                        role="dialog"
+                        aria-modal="true"
+                        aria-labelledby="delete-ticket-title"
+                    >
+
+                        <div className="delete-modal-icon">
+                            !
+                        </div>
+
+                        <h2 id="delete-ticket-title">
+                            Delete Ticket?
+                        </h2>
+
+                        <p>
+                            Are you sure you want to delete ticket{" "}
+                            <strong>
+                                #{deleteTarget.id}
+                            </strong>
+                            ?
+                        </p>
+
+                        <span className="delete-modal-warning">
+                            This action cannot be undone.
+                        </span>
+
+                        <div className="delete-modal-actions">
+
+                            <button
+                                type="button"
+                                className="delete-cancel-button"
+                                onClick={() =>
+                                    setDeleteTarget(null)
+                                }
+                            >
+                                Cancel
+                            </button>
+
+                            <button
+                                type="button"
+                                className="delete-confirm-button"
+                                onClick={() =>
+                                    deleteTicket(
+                                        deleteTarget.id
+                                    )
+                                }
+                            >
+                                Delete Ticket
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            )}
+
 
         </div>
     );
