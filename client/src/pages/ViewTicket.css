@@ -989,3 +989,243 @@
     text-decoration: underline;
 }
 
+
+/* =========================================================
+   VIEW TICKETS - BACK TO DASHBOARD
+   ========================================================= */
+
+.ticket-list-navigation {
+    max-width: 1550px;
+    margin: 0 auto;
+    padding: 18px 32px 0;
+}
+
+.ticket-back-dashboard {
+    border: none;
+    background: transparent;
+    color: #5367d8;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 6px 0;
+}
+
+.ticket-back-dashboard:hover {
+    color: #3548bb;
+}
+
+
+/* =========================================================
+   IN-APP NOTIFICATION
+   ========================================================= */
+
+.ticket-notification {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 3000;
+
+    min-width: 300px;
+    max-width: 420px;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 14px 18px;
+
+    border-radius: 10px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 12px 35px rgba(15, 23, 42, 0.16),
+        0 2px 8px rgba(15, 23, 42, 0.08);
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.ticket-notification-success {
+    border: 1px solid #bbf7d0;
+    color: #166534;
+}
+
+.ticket-notification-error {
+    border: 1px solid #fecaca;
+    color: #b91c1c;
+}
+
+.ticket-notification-icon {
+    width: 26px;
+    height: 26px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #22c55e;
+    color: #ffffff;
+
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.ticket-notification-error .ticket-notification-icon {
+    background: #dc2626;
+}
+
+
+/* =========================================================
+   DELETE CONFIRMATION MODAL
+   ========================================================= */
+
+.delete-modal-overlay {
+    position: fixed;
+    inset: 0;
+
+    z-index: 4000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background: rgba(15, 23, 42, 0.48);
+}
+
+.delete-modal {
+    width: 100%;
+    max-width: 440px;
+
+    padding: 32px;
+
+    border-radius: 14px;
+
+    background: #ffffff;
+
+    text-align: center;
+
+    box-shadow:
+        0 25px 60px rgba(15, 23, 42, 0.25),
+        0 8px 20px rgba(15, 23, 42, 0.12);
+}
+
+.delete-modal-icon {
+    width: 54px;
+    height: 54px;
+
+    margin: 0 auto 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #fef2f2;
+    color: #dc2626;
+
+    font-size: 26px;
+    font-weight: 700;
+}
+
+.delete-modal h2 {
+    margin: 0 0 10px;
+
+    color: #172033;
+
+    font-size: 22px;
+}
+
+.delete-modal p {
+    margin: 0;
+
+    color: #4b5563;
+
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.delete-modal-warning {
+    display: block;
+
+    margin-top: 8px;
+
+    color: #9ca3af;
+
+    font-size: 12px;
+}
+
+.delete-modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+
+    margin-top: 26px;
+}
+
+.delete-modal-actions button {
+    min-width: 125px;
+
+    padding: 10px 18px;
+
+    border-radius: 7px;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.delete-cancel-button {
+    border: 1px solid #d9dde5;
+    background: #ffffff;
+    color: #374151;
+}
+
+.delete-cancel-button:hover {
+    background: #f8f9fb;
+}
+
+.delete-confirm-button {
+    border: 1px solid #dc2626;
+    background: #dc2626;
+    color: #ffffff;
+}
+
+.delete-confirm-button:hover {
+    background: #b91c1c;
+}
+
+@media (max-width: 600px) {
+
+    .ticket-list-navigation {
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+
+    .ticket-notification {
+        left: 18px;
+        right: 18px;
+        top: 18px;
+        min-width: 0;
+    }
+
+    .delete-modal {
+        padding: 26px 20px;
+    }
+
+    .delete-modal-actions {
+        flex-direction: column-reverse;
+    }
+
+    .delete-modal-actions button {
+        width: 100%;
+    }
+}

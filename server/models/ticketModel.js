@@ -111,12 +111,75 @@ getTicketById: (id, callback) => {
 
     deleteTicket: (id, callback) => {
 
-        const sql = `
+        const deleteSql = `
             DELETE FROM tickets
             WHERE id = ?
         `;
 
-        db.query(sql, [id], callback);
+        db.query(deleteSql, [id], (deleteErr, deleteResult) => {
+
+            if (deleteErr) {
+                return callback(deleteErr);
+            }
+
+            if (deleteResult.affectedRows === 0) {
+                return callback(null, deleteResult);
+            }
+
+            /*
+             * Reuse the deleted ID only when it was the highest
+             * existing ticket ID.
+             *
+             * Existing lower ticket IDs are never renumbered.
+             */
+
+            const maxSql = `
+                SELECT MAX(id) AS max_id
+                FROM tickets
+            `;
+
+            db.query(maxSql, (maxErr, rows) => {
+
+                if (maxErr) {
+                    return callback(maxErr);
+                }
+
+                const maxId = rows[0]?.max_id;
+
+                if (maxId === null || Number(maxId) < Number(id)) {
+
+                    const nextAutoIncrement =
+                        maxId === null
+                            ? 1
+                            : Number(id);
+
+                    const alterSql = `
+                        ALTER TABLE tickets
+                        AUTO_INCREMENT = ?
+                    `;
+
+                    db.query(
+                        alterSql,
+                        [nextAutoIncrement],
+                        (alterErr) => {
+
+                            if (alterErr) {
+                                return callback(alterErr);
+                            }
+
+                            return callback(null, deleteResult);
+                        }
+                    );
+
+                } else {
+
+                    return callback(null, deleteResult);
+
+                }
+
+            });
+
+        });
 
     }
 
