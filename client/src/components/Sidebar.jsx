@@ -23,10 +23,6 @@ function Sidebar() {
         window.location.href = "/";
     };
 
-    const disabledMenu = (event) => {
-        event.preventDefault();
-    };
-
     return (
 
         <aside className="sidebar">
@@ -155,19 +151,17 @@ function Sidebar() {
     <span>Departments</span>
 </NavLink>
 
-                    <a
-                        href="#settings"
-                        className="menu-link disabled-link"
-                        onClick={disabledMenu}
-                    >
+<NavLink
+    to="/settings"
+    className={({ isActive }) =>
+        `menu-link ${isActive ? "active" : ""}`
+    }
+>
+    <FaCog />
 
-                        <FaCog />
+    <span>Settings</span>
 
-                        <span>Settings</span>
-
-                        <small>SOON</small>
-
-                    </a>
+</NavLink>
 
                 </div>
 

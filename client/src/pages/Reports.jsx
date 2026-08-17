@@ -88,8 +88,7 @@ function Reports() {
         : 0;
 
 
-    /* =========================
-       PRIORITY
+    /* =========================       PRIORITY
     ========================= */
 
     const priorities = [
@@ -178,7 +177,7 @@ function Reports() {
             ticket.category || "General",
             ticket.priority || "Medium",
             ticket.status || "Open",
-            ticket.full_name || "N/A",
+            ticket.requester_name || ticket.requester_name || ticket.full_name || "N/A",
             ticket.created_at
                 ? new Date(ticket.created_at).toLocaleString()
                 : ""
@@ -737,7 +736,8 @@ function Reports() {
                                                 </strong>
 
                                                 <span>
-                                                    {ticket.full_name ||
+                                                    {ticket.requester_name ||
+                                                        ticket.full_name ||
                                                         "Unknown requester"}
                                                 </span>
 

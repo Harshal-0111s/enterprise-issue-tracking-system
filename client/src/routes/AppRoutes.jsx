@@ -12,6 +12,7 @@ import OTPLogin from "../pages/OTPLogin";
 import ResetPassword from "../pages/ResetPassword";
 import Users from "../pages/Users";
 import Departments from "../pages/Departments";
+import Settings from "../pages/Settings";
 
 function AppRoutes() {
   return (
@@ -40,6 +41,8 @@ function AppRoutes() {
 <Route path="/users" element={<Users />} />
 
 <Route path="/departments" element={<Departments />} />
+
+<Route path="/settings" element={<Settings />} />
 
     </Routes>
   );
