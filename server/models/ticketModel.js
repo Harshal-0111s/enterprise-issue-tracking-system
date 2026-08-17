@@ -173,23 +173,15 @@ const Ticket = {
 
     deleteTicket: (id, callback) => {
 
-        const deleteSql = `
+        const sql = `
             DELETE FROM tickets
             WHERE id = ?
         `;
 
         db.query(
-            deleteSql,
+            sql,
             [id],
-            (deleteErr, deleteResult) => {
-
-                if (deleteErr) {
-                    return callback(deleteErr);
-                }
-
-                return callback(null, deleteResult);
-
-            }
+            callback
         );
 
     }
